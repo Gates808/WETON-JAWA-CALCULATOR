@@ -1,182 +1,104 @@
+<!--
+  Kalkulator Weton Jawa
+  Copyright (c) 2025 GATES
+  License: All rights reserved. (Gates Attribution)
+  NOTE: This file contains visible watermark and origin-check helper.
+  For stronger protection use server-side signing (HMAC/RSA) and host assets on your domain.
+-->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kalkulator Weton Jawa — GATES</title>
+<!-- Visible attribution meta -->
 <meta name="author" content="GATES">
 <meta name="copyright" content="GATES 2025">
 <style>
-/* ---------- FONT & RESET ---------- */
+/* (styles kept similar to your theme) */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-* { box-sizing: border-box; }
-body {
-  margin: 10px;
-  font-family: 'Roboto', sans-serif;
-  background: #2c5364;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
+body{margin:10;font-family:'Roboto',sans-serif;background:#2c5364;color:#fff;display:flex;justify-content:center;align-items:center;height:auto;}
+#calculator-container{width:95%;max-width:420px;padding:20px;background:linear-gradient(145deg,#2e3b4e,#1e2a38);border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,0.5);position:relative;overflow:hidden;}
+h1{text-align:center;font-size:1.2rem;margin-bottom:20px;color:#fff;text-transform:uppercase;letter-spacing:2px;}
+.row{display:flex;justify-content:space-between;gap:10px;margin-bottom:12px;}
+select{flex:1;padding:12px;border:none;border-radius:12px;background:linear-gradient(145deg,#3a506b,#2c3e50);color:#fff;font-size:0.8rem;box-shadow:inset 2px 2px 6px rgba(0,0,0,0.3),inset -2px -2px 6px rgba(255,255,255,0.05);outline:none;}
+button{flex:1;padding:14px;border:none;border-radius:14px;font-size:0.9rem;font-weight:bold;text-transform:uppercase;cursor:pointer;transition:0.2s;background:linear-gradient(145deg,#ff6b6b,#ff4757);color:#fff;box-shadow:0 5px 10px rgba(0,0,0,0.4);}
+button:hover{transform:translateY(-2px);box-shadow:0 7px 14px rgba(0,0,0,0.5);}
+#output{margin-top:8px;padding:15px;border-radius:14px;background:linear-gradient(145deg,#1e2a38,#2e3b4e);font-size:0.9rem;color:#00eaff;white-space:pre-wrap;overflow-y:auto;overflow-x:auto;min-height:180px;box-shadow:inset 2px 2px 6px rgba(0,0,0,0.4),inset -2px -2px 6px rgba(255,255,255,0.05);}
 
-/* ---------- KONTAINER UTAMA ---------- */
-#calculator-container {
-  width: 95%;
-  max-width: 540px;
-  padding: 28px;
-  background: linear-gradient(145deg,#2e3b4e,#1e2a38);
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  position: relative;
-  overflow: hidden;
-}
-
-/* ---------- JUDUL ---------- */
-h1 {
-  text-align: center;
-  font-size: 1.2rem;
-  margin-bottom: 18px;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-/* ---------- LAYOUT INPUT ---------- */
-.row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-select {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(145deg,#3a506b,#2c3e50);
-  color: #fff;
-  font-size: 0.9rem;
-  outline: none;
-  box-shadow: inset 2px 2px 6px rgba(0,0,0,0.25), inset -2px -2px 6px rgba(255,255,255,0.03);
-}
-button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: transform .12s ease;
-  background: linear-gradient(145deg,#ff6b6b,#ff4757);
-  color: #fff;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.4);
-}
-button:active { transform: translateY(1px); }
-
-/* ---------- AREA HASIL (OUTPUT) ---------- */
-/* Bungkus output agar bisa menumpuk watermark di belakang area ini saja */
-.output-wrapper {
-  position: relative;        /* konteks untuk watermark lokal */
-  margin-top: 10px;
-  border-radius: 14px;
-  overflow: visible;         /* watermark akan berada di belakang */
-  padding: 12px;
-}
-
-/* Kotak output sebenarnya: di atas watermark (z-index tinggi) */
-#output {
-  position: relative;
-  z-index: 2;                /* pastikan teks di atas watermark */
-  margin: 0;
-  padding: 16px;
-  border-radius: 12px;
-  background: linear-gradient(145deg,#1e2a38,#2e3b4e);
-  font-size: 0.95rem;
-  color: #00eaff;
-  white-space: pre-wrap;
-  min-height: 160px;
-  max-height: 360px;
-  overflow-y: auto;
-  box-shadow: inset 2px 2px 8px rgba(0,0,0,0.45), inset -2px -2px 6px rgba(255,255,255,0.02);
-}
-
-/* ---------- WATERMARK (DI BALIK KOTAK OUTPUT) ---------- */
-/* watermark berada di dalam .output-wrapper, di bawah #output (z-index 1) */
-.output-wrapper .watermark-behind {
+/* VISIBLE WATERMARK - prominent but stylish */
+.watermark {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%) rotate(-18deg);
-  font-size: 96px;
+  pointer-events: none; /* tidak mengganggu klik */
+  right: -30px;
+  bottom: -30px;
+  transform: rotate(-25deg);
+  font-size: 72px;
   font-weight: 900;
+  color: rgba(255,255,255,0.06);
   letter-spacing: 6px;
-  color: rgba(255,255,255,0.06); /* transparansi tipis agar tidak mengganggu */
-  z-index: 1; /* di bawah #output */
-  pointer-events: none; /* tidak mengganggu interaksi */
   user-select: none;
-  white-space: nowrap;
-  mix-blend-mode: normal;
+  mix-blend-mode: screen;
 }
 
-/* ---------- FOOTER ATTRIBUTION KECIL ---------- */
+/* small footer attribution */
 .footer-attr {
-  margin-top: 8px;
-  font-size: 11px;
-  color: rgba(255,255,255,0.42);
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
   user-select: none;
-}
-
-/* Responsive kecil */
-@media (max-width:420px){
-  .output-wrapper .watermark-behind { font-size: 64px; transform: translate(-50%,-50%) rotate(-18deg); }
 }
 </style>
 </head>
 <body>
 <div id="calculator-container">
+  <div class="watermark">GATES</div>
+  <div class="footer-attr">© GATES — Kalkulator Weton Jawa</div>
+
   <h1>💫 Kalkulator Weton Jawa</h1>
 
   <div class="row">
-    <select id="hari1" aria-label="Hari lahir kamu">
+    <select id="hari1">
       <option value="">Hari Lahir Kamu</option>
-      <option value="5">Minggu (5)</option>
-      <option value="4">Senin (4)</option>
-      <option value="3">Selasa (3)</option>
-      <option value="7">Rabu (7)</option>
-      <option value="8">Kamis (8)</option>
-      <option value="6">Jumat (6)</option>
-      <option value="9">Sabtu (9)</option>
+      <option value="5">Minggu</option>
+      <option value="4">Senin</option>
+      <option value="3">Selasa</option>
+      <option value="7">Rabu</option>
+      <option value="8">Kamis</option>
+      <option value="6">Jumat</option>
+      <option value="9">Sabtu</option>
     </select>
-    <select id="pasaran1" aria-label="Pasaran kamu">
+    <select id="pasaran1">
       <option value="">Pasaran Kamu</option>
-      <option value="7">Pon (7)</option>
-      <option value="4">Wage (4)</option>
-      <option value="8">Kliwon (8)</option>
-      <option value="5">Legi (5)</option>
-      <option value="9">Pahing (9)</option>
+      <option value="7">Pon</option>
+      <option value="4">Wage</option>
+      <option value="8">Kliwon</option>
+      <option value="5">Legi</option>
+      <option value="9">Pahing</option>
     </select>
   </div>
 
   <div class="row">
-    <select id="hari2" aria-label="Hari lahir pasangan">
+    <select id="hari2">
       <option value="">Hari Lahir Pasangan</option>
-      <option value="5">Minggu (5)</option>
-      <option value="4">Senin (4)</option>
-      <option value="3">Selasa (3)</option>
-      <option value="7">Rabu (7)</option>
-      <option value="8">Kamis (8)</option>
-      <option value="6">Jumat (6)</option>
-      <option value="9">Sabtu (9)</option>
+      <option value="5">Minggu</option>
+      <option value="4">Senin</option>
+      <option value="3">Selasa</option>
+      <option value="7">Rabu</option>
+      <option value="8">Kamis</option>
+      <option value="6">Jumat</option>
+      <option value="9">Sabtu</option>
     </select>
-    <select id="pasaran2" aria-label="Pasaran pasangan">
+    <select id="pasaran2">
       <option value="">Pasaran Pasangan</option>
-      <option value="7">Pon (7)</option>
-      <option value="4">Wage (4)</option>
-      <option value="8">Kliwon (8)</option>
-      <option value="5">Legi (5)</option>
-      <option value="9">Pahing (9)</option>
+      <option value="7">Pon</option>
+      <option value="4">Wage</option>
+      <option value="8">Kliwon</option>
+      <option value="5">Legi</option>
+      <option value="9">Pahing</option>
     </select>
   </div>
 
@@ -185,36 +107,29 @@ button:active { transform: translateY(1px); }
     <button id="reset">Reset</button>
   </div>
 
-  <!-- output-wrapper: watermark diletakkan di sini sehingga hanya berada di belakang output -->
-  <div class="output-wrapper" aria-hidden="true">
-    <!-- Watermark berada di belakang (#output) -->
-    <div class="watermark-behind">GATES</div>
-
-    <!-- Kotak output dengan z-index lebih tinggi -->
-    <div id="output" role="status">Hasil perhitungan akan muncul di sini...</div>
-  </div>
-
-  <div class="footer-attr">© GATES — Kalkulator Weton Jawa</div>
+  <div id="output">Hasil perhitungan akan muncul di sini...</div>
 </div>
 
 <script>
-/* Simple weton calc + safe origin hint (non-invasive)
-   Watermark sudah ditampilkan di belakang kotak hasil (output).
+/*
+  SAFE: Visible watermark + origin check.
+  NOTE: Origin checks and client-side measures can be bypassed by determined users.
+  For robust protection, combine with server-side signing and legal licensing.
 */
 
 const output = document.getElementById("output");
 
+// Simple weton calc (same as before)
 function hitungWeton() {
-  const h1 = parseInt(document.getElementById("hari1").value || 0, 10);
-  const p1 = parseInt(document.getElementById("pasaran1").value || 0, 10);
-  const h2 = parseInt(document.getElementById("hari2").value || 0, 10);
-  const p2 = parseInt(document.getElementById("pasaran2").value || 0, 10);
+  const h1 = parseInt(document.getElementById("hari1").value || 0);
+  const p1 = parseInt(document.getElementById("pasaran1").value || 0);
+  const h2 = parseInt(document.getElementById("hari2").value || 0);
+  const p2 = parseInt(document.getElementById("pasaran2").value || 0);
 
   if (!h1 || !p1 || !h2 || !p2) {
     output.textContent = "⚠️ Harap pilih semua hari dan pasaran terlebih dahulu.";
     return;
   }
-
   const total1 = h1 + p1;
   const total2 = h2 + p2;
   const jumlah = total1 + total2;
@@ -222,7 +137,7 @@ function hitungWeton() {
 
   let makna = "";
   switch (sisa) {
-    case 1: makna = "Selamat — Rumah tangga tenteram."; break;
+    case 1: makna = "Selamat — Rumah tangganya tenteram."; break;
     case 2: makna = "Baik — Penuh harta dan kekayaan."; break;
     case 3: makna = "Jelek — Akan banyak penderitaan."; break;
     case 4: makna = "Kurang baik — Akan hidup melarat."; break;
@@ -230,20 +145,20 @@ function hitungWeton() {
   }
 
   output.textContent = 
-`📜 HASIL PERHITUNGAN WETON
-─────────────────────────
-Neptu Kamu      : ${total1}
-Neptu Pasangan  : ${total2}
-Jumlah Total    : ${jumlah}
-Sisa Pembagian  : ${sisa}
+`📜 HASIL PERHITUNGAN WETON:
+━━━━━━━━━━━━━━━━━━━
+Neptu Kamu: ${total1}
+Neptu Pasangan: ${total2}
+Jumlah Total: ${jumlah}
+Sisa Pembagian 5: ${sisa}
 
 🔮 Makna Hubungan:
 ${makna}
-
+  
 — Protected by GATES —`;
 }
 
-function resetForm(){
+function resetForm() {
   document.querySelectorAll("select").forEach(s => s.selectedIndex = 0);
   output.textContent = "Hasil perhitungan akan muncul di sini...";
 }
@@ -251,16 +166,34 @@ function resetForm(){
 document.getElementById("calculate").addEventListener("click", hitungWeton);
 document.getElementById("reset").addEventListener("click", resetForm);
 
-/* Optional: origin hint (non-intrusive). Ganti allowed jika perlu. */
-(function originHint(){
+/* ORIGIN CHECK — memberi peringatan jika file di-embed di domain lain.
+   Ini bukan pencegah sempurna, tetapi berguna sebagai deterrent. */
+(function originCheck(){
   try {
-    const allowed = ["yourdomain.com", "www.yourdomain.com", "localhost"];
-    if (!allowed.includes(location.hostname)) {
-      // hanya log dan gaya ringan — bukan menyembunyikan atau menghalangi
-      console.info("GATES: script dijalankan pada domain", location.hostname);
+    const allowed = [
+      "yourdomain.com",        // ganti dengan domainmu
+      "www.yourdomain.com",
+      "localhost"
+    ];
+    const host = location.hostname;
+    if (!allowed.includes(host)) {
+      console.warn("⚠️ Perhatian: script ini dijalankan di domain:", host);
+      // tampilkan jejak visual kecil (tidak tersembunyi)
+      const note = document.createElement('div');
+      note.style.position = 'fixed';
+      note.style.left = '10px';
+      note.style.top = '10px';
+      note.style.padding = '6px 10px';
+      note.style.background = 'rgba(255,90,90,0.12)';
+      note.style.color = '#fff';
+      note.style.fontSize = '12px';
+      note.style.borderRadius = '6px';
+      note.style.zIndex = 9999;
+      note.textContent = '⚠️ Unauthorised domain — GATES';
+      document.body.appendChild(note);
     }
-  } catch(e){}
+  } catch(e) { /* fail silently */ }
 })();
 </script>
 </body>
-</html>
+      </html>
